@@ -15,7 +15,7 @@ const dbCol = require('./dbCollectionsConnection.js')
 
 module.exports = {
 	start: () => {
-		return new Promise( (resolve, reject) => {
+		return new Promise((resolve, reject) => {
 			console.log('=======STARTING SCRAPE========')
 			resolve()
 		})
@@ -36,7 +36,7 @@ module.exports = {
 	},
 
 	getData: (params) => {
-		return new Promise( function(resolve, reject) {
+		return new Promise((resolve, reject) =>{
 			
 			let download = (tempPath, outPath, filename, url) => {
 				console.log('Starting Download')
@@ -66,7 +66,7 @@ module.exports = {
 	},
 
 	toGeojson: (path) => {
-		return new Promise( function(resolve, reject) {
+		return new Promise((resolve, reject) =>{
 			let outPath = 'downloads/converted/geojson.json'
 			let geoJSON = Ogr2ogr(path)
                     .format('geoJSON')
@@ -84,7 +84,7 @@ module.exports = {
 	},
 
 	processGeoJson: (path) => {
-		return new Promise( function(resolve, reject) {
+		return new Promise((resolve, reject) =>{
 			const getDate =() =>{
 				let date = new Date();
 				let year = date.getFullYear();
