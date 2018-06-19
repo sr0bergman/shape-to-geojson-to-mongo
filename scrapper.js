@@ -1,6 +1,7 @@
 // scraper.js
 const AdmZip = require('adm-zip')
 const Http = require('http')
+const Https = require('https')
 const Fs = require('fs')
 const Ogr2ogr = require('ogr2ogr')
 const Turf = require('turf');
@@ -43,22 +44,43 @@ module.exports = {
 				console.log('File Name: ' + filename)
 				console.log('URL: ' + url)
 				console.log()
-				Http.get(url, (response) => {
-					console.log('...')
-		 			response.on('data', (data) => {
-		 				Fs.appendFileSync(tempPath, data)
-					})
+				let protocol = url.substring(0, 5);
+				console.log(protocol)
+				if(protocol === 'https'){
+					Https.get(url, (response) => {
+						console.log('...')
+			 			response.on('data', (data) => {
+			 				Fs.appendFileSync(tempPath, data)
+						})
 
-		 			response.on('end', () => {
-		 			 	let zip = new AdmZip(tempPath)
-						zip.extractAllTo(outPath)
-		 				Fs.unlink(tempPath, (err, fd) => {
-		 					console.log(filename + ' downloaded and extracted')
-		 					resolve(outPath)
-		 				})
+			 			response.on('end', () => {
+			 			 	let zip = new AdmZip(tempPath)
+							zip.extractAllTo(outPath)
+			 				Fs.unlink(tempPath, (err, fd) => {
+			 					console.log(filename + ' downloaded and extracted')
+			 					resolve(outPath)
+			 				})
+				 		})
+
+			 		})	
+				} else {
+					Http.get(url, (response) => {
+						console.log('...')
+			 			response.on('data', (data) => {
+			 				Fs.appendFileSync(tempPath, data)
+						})
+
+			 			response.on('end', () => {
+			 			 	let zip = new AdmZip(tempPath)
+							zip.extractAllTo(outPath)
+			 				Fs.unlink(tempPath, (err, fd) => {
+			 					console.log(filename + ' downloaded and extracted')
+			 					resolve(outPath)
+			 				})
+				 		})
+
 			 		})
-
-		 		})
+				}
 			}
 			download(params.tempPath, params.outPath, params.filename, params.url)
 
